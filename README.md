@@ -20,6 +20,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Database migrations
+
+This project uses Supabase SQL migrations in `supabase/migrations`, not Drizzle.
+Run the following commands from the project root:
+
+1. Install the CLI once if needed: `npm install --save-dev supabase`
+2. Link the project: `npx supabase link --project-ref YOUR_PROJECT_REF`
+3. Push all pending migrations: `npx supabase db push`
+4. Check migration status: `npx supabase migration list`
+
+The project reference is the ID in the Supabase project URL, for example
+`abcdefghijklmnop` in `https://app.supabase.com/project/abcdefghijklmnop`.
+The CLI may ask for a database password during linking; enter it directly in
+the terminal and do not commit it to `.env` or source control.
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

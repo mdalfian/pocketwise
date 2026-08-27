@@ -1,0 +1,17 @@
+import { DashboardBackLink } from "@/components/dashboard-back-link";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { updatePassword, updateProfile } from "./actions";
+import { FormAlert } from "@/components/form-alert";
+import { PendingSubmitButton } from "@/components/pending-submit-button";
+import { createClient } from "@/lib/supabase/server";
+
+export default async function ProfilePage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+  const { data: profile } = await supabase.from("profiles").select("display_name").eq("id", user.id).single();
+  const fallbackName = user.email?.split("@")[0] || "teman";
+
+  return <main className="min-h-screen bg-[#f3f7f1] px-4 py-6 text-[#17211b] sm:px-6 sm:py-10 lg:px-10"><div className="mx-auto max-w-2xl"><DashboardBackLink /><section className="mt-6 space-y-6 sm:mt-8"><div className="rounded-3xl border border-[#dce8d9] bg-white p-5 shadow-sm sm:p-8"><div className="mb-6"><p className="text-sm font-semibold uppercase tracking-[.18em] text-[#5e8a54]">Pengaturan akun</p><h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Edit profil</h1><p className="mt-3 text-sm leading-6 text-[#718076]">Atur nama yang akan digunakan Pocketwise saat menyapamu.</p></div><Suspense fallback={null}><FormAlert /></Suspense><form action={updateProfile} className="space-y-5"><label className="block text-sm font-medium">Nama tampilan<input required name="displayName" defaultValue={profile?.display_name || fallbackName} maxLength={80} className="mt-2 w-full rounded-xl border border-[#dce3dc] px-4 py-3 outline-none transition focus:border-[#5e8a54] focus:ring-2 focus:ring-[#d8f37d]/60" /></label><div className="flex justify-end pt-2"><PendingSubmitButton pendingLabel="Menyimpan..." className="cursor-pointer rounded-xl bg-[#173d2b] px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-[#24573c] focus:outline-none focus:ring-2 focus:ring-[#d8f37d]">Simpan profil</PendingSubmitButton></div></form></div><div className="rounded-3xl border border-[#dce8d9] bg-white p-5 shadow-sm sm:p-8"><p className="text-sm font-semibold uppercase tracking-[.18em] text-[#5e8a54]">Keamanan</p><h2 className="mt-2 text-2xl font-semibold text-[#173d2b]">Ubah password</h2><p className="mt-2 text-sm leading-6 text-[#718076]">Gunakan password saat ini untuk membuat password baru.</p><form action={updatePassword} className="mt-6 space-y-4"><label className="block text-sm font-medium">Password saat ini<input required type="password" name="currentPassword" className="mt-2 w-full rounded-xl border border-[#dce3dc] px-4 py-3" /></label><label className="block text-sm font-medium">Password baru<input required minLength={8} type="password" name="newPassword" className="mt-2 w-full rounded-xl border border-[#dce3dc] px-4 py-3" /></label><label className="block text-sm font-medium">Konfirmasi password baru<input required minLength={8} type="password" name="confirmPassword" className="mt-2 w-full rounded-xl border border-[#dce3dc] px-4 py-3" /></label><PendingSubmitButton pendingLabel="Mengubah..." className="cursor-pointer rounded-xl bg-[#173d2b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#24573c] focus:outline-none focus:ring-2 focus:ring-[#d8f37d]">Ubah password</PendingSubmitButton></form></div></section></div></main>;
+}

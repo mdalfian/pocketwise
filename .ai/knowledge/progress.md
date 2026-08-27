@@ -1,0 +1,116 @@
+# Development Progress
+
+## 2026-08-26
+
+- Initialized Next.js App Router project with TypeScript, Tailwind CSS, ESLint, and npm.
+- Replaced starter page with Pocketwise finance app landing page.
+- Added initial `/login` route with validated browser-required email/password fields.
+- Added `.env.example` placeholders for future Auth.js and PostgreSQL integration.
+- Added Supabase SSR/browser clients, auth server actions, middleware cookie refresh, and protected `/dashboard` route.
+- Connected the login form to `signInWithPassword`.
+- Added initial Supabase migration for profiles, accounts, categories, transactions, RLS policies, and new-user profile creation.
+- Added Zod transaction validation and an authenticated transaction creation server action.
+- Added `/dashboard/transactions/new` UI and dashboard entry point.
+- Aligned Supabase clients with the `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` environment variable.
+- Added authenticated account creation and account listing pages.
+- Dashboard now reads the user's real account balances and enforces ownership through Supabase RLS/query scoping.
+- Set Indonesian as the primary UI language and redesigned the dashboard with one prominent action plus grouped navigation cards.
+- Localized account and transaction list screens with friendlier mobile-first styling.
+- Localized landing page, login, signup, and account/transaction forms into Indonesian.
+- Added reusable Indonesian form alerts for invalid credentials, invalid input, signup failures, and confirmation messages.
+- Added alerts to account and transaction forms and completed remaining visible landing/auth copy localization.
+- Rebuilt the dashboard in Indonesian with polished cards, visible recent activity, account summaries, and a styled Keluar button.
+- Aligned landing, login, signup, and metadata with the dashboard's Indonesian brand, colors, cards, and interactions.
+- Added `/signup` with Supabase email/password registration and linked it from login.
+- Replaced manual transaction account UUID input with a user-owned account selector.
+- Added `/dashboard/transactions` list view.
+- Improved dashboard and transaction forms for mobile layouts with stacked actions, responsive typography, and touch-friendly controls.
+- Added atomic transaction balance updates through Supabase RPC migration `002_transaction_balance_rpc.sql`; apply this migration in Supabase SQL Editor before using new transactions.
+- Added atomic transaction balance updates through Supabase RPC migration `002_transaction_balance_rpc.sql`.
+- Dashboard now displays live recent transactions and income/spending summaries with interactive card hover states.
+- Removed the duplicate activity section from the dashboard while keeping the compact activity summary card.
+- Redesigned transaction history with summary metrics, account labels, formatted dates, transaction type icons, and clearer amounts.
+- Set the new transaction form date field to today's date by default.
+- Replaced the dashboard Aktivitas terakhir card with a useful Akses cepat panel for transaction history and account management.
+- Added transaction history filters for type, account, start date, and end date, with filtered totals and result count.
+- Restored the latest transaction history preview to the dashboard below the balance and quick-access cards.
+- Improved the transaction filter presentation with a grouped panel, heading, helper text, and reset action.
+- Tightened the transaction filter panel for mobile with smaller spacing, controls, and clearer grouping.
+- Kept dashboard history visible and tuned its action layout to remain compact on mobile.
+- Added a reusable mobile filter bottom-sheet component for transaction filtering and prepared compact icon-style dashboard actions.
+- Applied icon-only arrow and settings actions for dashboard history and account controls, with accessible labels and tooltips.
+- Separated transaction filters from the history content: desktop uses a dedicated sidebar and mobile uses a bottom-sheet filter modal.
+- Restored the preferred single horizontal desktop filter panel and removed the duplicate mobile-trigger behavior from the filter component.
+- Rebuilt the transaction history page with exactly one responsive filter instance: horizontal panel on desktop and bottom-sheet trigger on mobile.
+- Reformatted the transaction history page and repositioned the Catat transaksi button below the heading on mobile, while keeping it right-aligned on desktop.
+- Removed the arrow from the Catat transaksi button and made the mobile filter trigger display without a surrounding card.
+- Polished the landing page Masuk and Mulai sekarang controls with consistent button styling, hover motion, arrow affordances, and a trust badge.
+- Added a subtle landing hero ornament and upgraded the dashboard rekening Kelola action with a bordered interactive button.
+- Redesigned the new transaction page with a branded guidance panel, polished form card, responsive two-column layout, and clearer empty-account state.
+- Simplified the new transaction page into a focused single card with subtle header separation, accessible focus states, and clear Batal/Simpan actions.
+- Added optional user-owned transaction category selection to the entry form and validated category ownership in the server action.
+- Added migration `003_default_categories_for_new_users.sql` to seed starter income and expense categories during signup.
+- Added category labels and category filtering to the transaction history page.
+- Added `/dashboard/categories` with user-owned category listing and a simple form to create income or expense categories.
+- Added a dashboard shortcut to category management and a safe backfill migration for existing users.
+- Changed category creation from an inline form to a responsive modal opened by the Tambah kategori button.
+- Added category edit and delete actions with ownership validation, plus consistent hover/focus motion for category controls.
+- Rebuilt the dashboard markup with encoding-safe labels, removing mojibake symbols from the visible view and retaining category navigation.
+- Added an inline wallet SVG app logo and restored the logout icon on the dashboard header.
+- Standardized cursor, hover lift, shadow, active, and focus states for category and transaction filter primary buttons.
+- Added delete confirmation for categories and normalized interaction styling on the remaining transaction/category actions.
+- Added reusable pending submit behavior for category create, edit, and delete actions, including disabled states to prevent duplicate submissions.
+- Replaced the native category delete confirmation with a polished shadcn-style AlertDialog using Radix UI.
+- Fixed the destructive AlertDialog button by wiring it through `AlertDialogAction` with the existing server-action form.
+- Fixed mobile AlertDialog footer actions so `Batal` and `Hapus kategori` share consistent full-width sizing, while remaining compact on desktop.
+- Added category-page failure alerts for invalid input, duplicate categories, save failures, and delete failures.
+- Updated transaction entry so users choose a category first and the transaction type is derived automatically from the category kind.
+- Simplified transaction entry by hiding the derived type field and making the description optional.
+- Fixed transaction submission failure caused by the non-UUID `transfer` pseudo-option being sent as `categoryId`.
+- Added atomic transfer support with source/destination accounts, balance checks, paired transaction records, and friendlier dashboard greeting/logout interactions.
+- Refined the dashboard greeting by removing the visible email and adding a warmer user-focused welcome layout.
+- Added profile settings at `/dashboard/profile` so users can edit their display name with validation and success/error alerts.
+- Added direct password change in profile settings with current-password verification, confirmation validation, and responsive dashboard profile/logout controls.
+- Replaced the profile pencil action with a user icon, removed the redundant profile cancel button, and kept the profile save action right-aligned.
+- Fixed transaction saves with an empty optional description by normalizing it to a valid fallback before calling the balance RPC; added a migration to ensure the description constraint is consistent.
+- Initialized Supabase CLI, added local `supabase` dev dependency, and documented `db:link`, `db:push`, and `db:status` workflows for running SQL migrations from the project.
+- Updated transfer entry so the destination account excludes the selected source account and resets when the source changes.
+- Restyled the dashboard `Catat transaksi` button with a stronger CTA treatment, plus icon, hover lift, and improved focus state.
+- Improved transfer diagnostics by validating both owned accounts before the RPC, logging the underlying RPC error, and showing a specific message when the transfer function is missing.
+- Added transaction deletion with an atomic Supabase RPC that reverses the original income/expense balance impact, plus confirmation and pending UI in transaction history.
+- Integrated the supplied Pocketwise logo on the login page, registered the 192px and 512px PWA icons in the manifest, and added the Apple touch icon metadata reference.
+- Restored the original inline wallet icon on the login page after deciding not to use the supplied SVG logo in the UI.
+- Added persistent dark mode with a theme toggle on the login page, saved theme preference, system-theme detection, and global dark color overrides.
+- Moved the dark-mode toggle into the global layout so it is available on every page, and tuned shared light-palette colors for dark-mode contrast.
+- Improved dark mode for the quick-access card and transaction CTA, added dark styling for the accounts page background/cards, and moved the global theme toggle to avoid overlapping logout controls.
+- Increased dark-mode contrast for the Akses Cepat heading and CTA plus icon, and darkened income/expense transaction icon backgrounds.
+- Fixed the hydration mismatch that prevented client interactions by stabilizing the theme toggle's initial render and using Next's `beforeInteractive` script handling.
+- Suppressed the intentional root `<html>` class difference caused by applying the saved theme before hydration.
+- Removed pre-hydration theme initialization after Android still reported client interaction failures; theme selection now initializes only after hydration to keep the React tree stable.
+- Hardened theme toggling for Android/PWA contexts by handling restricted localStorage without preventing the current theme change.
+- Allowed the Android LAN origin `192.168.5.197` to load Next.js development resources, including client chunks and HMR.
+- Added consistent icon-only edit and delete controls to account cards, with an edit modal and shared Radix alert confirmation backed by ownership-validated server actions.
+- Prepared the Next.js configuration for production by limiting the Android LAN origin to development mode only.
+- Improved mobile/PWA theme-toggle touch behavior with a larger touch target, touch manipulation, and a higher non-blocking overlay layer.
+- Added migration `007_ensure_transfer_rpc.sql` to recreate and grant the transfer RPC safely when migration history says it is applied but the function is missing.
+- Standardized dashboard back navigation with a shared touch-friendly `DashboardBackLink` component and added the initial PWA manifest/theme metadata foundation.
+- Fixed Next.js `themeColor` metadata warning by moving it to `viewport`, narrowed Supabase middleware matching to app routes, and added a dashboard loading skeleton for faster perceived navigation.
+- Cleaned transaction-history mojibake, restored account/category relation rendering through `relationName`, and simplified the shared back button label to `Kembali`.
+- Changed transaction edit/delete actions to accessible icon-only buttons matching category management, kept browser delete confirmation, and simplified mobile transaction cards.
+- Aligned desktop transaction edit/delete icons to the far right edge of each card while preserving mobile placement.
+- Confirmed transaction edit is better kept as a dedicated page for a full, reliable form; fixed the desktop action wrapper so right-edge positioning is active.
+- Moved desktop transaction actions to the lower-right corner to avoid covering the amount; retained the edit flow as a dedicated page.
+- Replaced transaction deletion browser confirm with the same Radix alert dialog pattern used for category deletion.
+- Cleaned confirmed leftovers: removed the unused browser Supabase client and default create-next-app public assets; retained all database migrations.
+- Fixed transaction history relationship rendering so account names display correctly for Supabase object or array responses; transfers now show a clear transfer label instead of appearing category-less.
+- Updated transfer RPC so the source records an expense and the destination records income, while balances continue moving atomically.
+- Added a login submit loading state with an animated spinner, `Memproses...` label, and disabled submit behavior.
+- Replaced mojibake password placeholder, brand symbol, and profile back icon with encoding-safe characters.
+- Replaced the remaining corrupted login password placeholder with `Masukkan password`.
+- Replaced text-only category controls with icon buttons and applied the wallet SVG logo to the landing page.
+
+## Next steps
+
+- Add account and transaction tables in Supabase/PostgreSQL.
+- Build transaction creation and balance calculation flows.
+- Add signup UI and email confirmation handling.

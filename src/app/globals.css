@@ -5,6 +5,12 @@
   --foreground: #171717;
 }
 
+html.dark {
+  --background: #101713;
+  --foreground: #edf5ee;
+  color-scheme: dark;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -24,3 +30,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+html.dark body { background: #101713; color: #edf5ee; }
+html.dark .bg-white, html.dark .bg-white\/80 { background-color: #18221b; }
+html.dark .bg-\[\#f3f7f1\] { background-color: #101713; }
+html.dark .bg-\[\#f7f8f5\] { background-color: #101713; }
+html.dark .bg-\[\#fbfdfb\], html.dark .bg-\[\#fafbf9\], html.dark .bg-\[\#f7faf5\] { background-color: #1d2920; }
+html.dark .text-\[\#17211b\] { color: #edf5ee; }
+html.dark .text-\[\#718076\], html.dark .text-\[\#526057\] { color: #aab9ad; }
+html.dark [class*="border-[#e1e9df]"], html.dark [class*="border-[#dce3dc]"], html.dark [class*="border-[#dce8d9]"] { border-color: #304235; }
+html.dark .text-\[\#173d2b\] { color: #d8f37d; }
+html.dark .text-\[\#52754c\], html.dark .text-\[\#385b32\] { color: #b7d9a7; }
+html.dark .text-\[\#849187\], html.dark .text-\[\#b5cdbb\] { color: #9caf9f; }
+html.dark .bg-\[\#e8f1e5\] { background-color: #263a2a; }
+html.dark .bg-\[\#edf6e9\], html.dark .bg-\[\#e8f1e5\] { background-color: #29402e; }
+html.dark .bg-\[\#d8f37d\] { background-color: #9fbd55; }
+html.dark .bg-white\/65 { background-color: #314a35; }
+html.dark .text-\[\#52653f\], html.dark .text-\[\#385b32\] { color: #d6e7b6; }
+html.dark .text-\[\#173d2b\] { color: #d8f37d; }
+html.dark .bg-\[\#d8f37d\] { background-color: #203328; }
+html.dark .bg-\[\#d8f37d\] .text-\[\#173d2b\] { color: #edf5ee; }
+html.dark .bg-\[\#d8f37d\] .text-\[\#52653f\] { color: #b9d2bd; }
+html.dark .bg-\[\#d8f37d\] .bg-white\/65 { background-color: #2b4432; }
+html.dark .bg-\[\#d8f37d\] .bg-white\/65:hover { background-color: #36553e; }
+html.dark .bg-\[\#e8f6e8\] { background-color: #23432d; }
+html.dark .bg-\[\#fff0ed\] { background-color: #492c2b; }
+html.dark .divide-\[\#edf1ed\] > :not([hidden]) ~ :not([hidden]) { border-color: #304235; }
+html.dark input, html.dark select, html.dark textarea { color: #edf5ee; }
+html.dark input::placeholder, html.dark textarea::placeholder { color: #809286; }

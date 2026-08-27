@@ -1,0 +1,3 @@
+export default function DashboardLoading() {
+  return <main className="min-h-screen bg-[#f3f7f1] px-4 py-6 sm:px-6 sm:py-8"><div className="mx-auto max-w-6xl animate-pulse"><div className="h-14 rounded-2xl bg-white/80" /><div className="mt-8 h-10 w-2/3 rounded-xl bg-[#dce8d9]" /><div className="mt-6 grid gap-4 lg:grid-cols-2"><div className="h-48 rounded-[2rem] bg-[#dce8d9]" /><div className="h-48 rounded-[2rem] bg-[#e8f1e5]" /></div><div className="mt-5 h-64 rounded-[2rem] bg-white" /></div></main>;
+}
