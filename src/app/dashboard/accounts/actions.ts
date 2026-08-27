@@ -12,7 +12,7 @@ const accountSchema = z.object({
 
 export async function createAccount(formData: FormData) {
   const parsed = accountSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) redirect("/dashboard/accounts/new?error=invalid-input");
+  if (!parsed.success) redirect("/dashboard/accounts?error=invalid-input");
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -25,7 +25,7 @@ export async function createAccount(formData: FormData) {
     currency: "IDR",
   });
 
-  if (error) redirect("/dashboard/accounts/new?error=save-failed");
+  if (error) redirect("/dashboard/accounts?error=save-failed");
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/accounts");
   redirect("/dashboard/accounts");

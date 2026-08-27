@@ -90,6 +90,21 @@
 - Hardened theme toggling for Android/PWA contexts by handling restricted localStorage without preventing the current theme change.
 - Allowed the Android LAN origin `192.168.5.197` to load Next.js development resources, including client chunks and HMR.
 - Added consistent icon-only edit and delete controls to account cards, with an edit modal and shared Radix alert confirmation backed by ownership-validated server actions.
+- Removed temporary theme debugging logs before production use.
+- Added a responsive six-month cash-flow chart to the dashboard, showing income and expense bars from transaction data.
+- Added mobile-friendly six-month totals for total income, total expense, and net cash flow, with dark-mode card colors.
+- Added transaction search across description, account, and category in the history filters.
+- Added a Reset button to clear all transaction search and filter parameters.
+- Fixed the mobile filter modal so its fields reset visually after using Reset.
+- Improved dark-mode contrast for shared confirmation dialogs and edit/filter modal surfaces.
+- Declared `zod` as a direct dependency because the application imports it in validation and server actions.
+- Started category-based monthly budgets with a Supabase migration, per-user RLS, budget CRUD, and current-month spending progress.
+- Integrated budget management into category editing and displayed each expense category's current-month budget on the category card.
+- Fixed category budget editing validation: empty budget now clears the current budget, and numeric values update correctly.
+- Ensured the category edit modal visibly includes the Budget bulan ini field.
+- Made the budget field conditional in the category edit modal; it is hidden when the selected type is Pemasukan.
+- Restored the trash-can SVG icon and added explicit dark-mode styling for the desktop transaction filter panel.
+- Replaced the account creation page link with an inline dark-mode-compatible account creation modal; retained the old route as a fallback.
 - Prepared the Next.js configuration for production by limiting the Android LAN origin to development mode only.
 - Improved mobile/PWA theme-toggle touch behavior with a larger touch target, touch manipulation, and a higher non-blocking overlay layer.
 - Added migration `007_ensure_transfer_rpc.sql` to recreate and grant the transfer RPC safely when migration history says it is applied but the function is missing.

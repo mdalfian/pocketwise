@@ -10,13 +10,10 @@ export function ThemeToggle() {
       let savedTheme: string | null = null;
       try {
         savedTheme = window.localStorage.getItem("theme");
-      } catch (error) {
-        console.warn("[Pocketwise] Theme storage unavailable", error);
-      }
+      } catch { }
       const shouldUseDark = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
       document.documentElement.classList.toggle("dark", shouldUseDark);
       setDark(shouldUseDark);
-      console.info("[Pocketwise] Theme toggle ready", { savedTheme, dark: shouldUseDark });
     });
     return () => cancelAnimationFrame(frame);
   }, []);
@@ -25,7 +22,6 @@ export function ThemeToggle() {
     const next = !document.documentElement.classList.contains("dark");
     document.documentElement.classList.toggle("dark", next);
     setDark(next);
-    console.info("[Pocketwise] Theme changed", { dark: next });
     try {
       window.localStorage.setItem("theme", next ? "dark" : "light");
     } catch {
