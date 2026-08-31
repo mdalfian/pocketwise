@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Pocketwise — Keuangan lebih jelas",
   description: "Cara yang lebih tenang untuk mengatur dan memahami uangmu.",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Pocketwise" },
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "Pocketwise" },
   icons: { apple: "/icons/apple-touch-icon.png" },
 };
 

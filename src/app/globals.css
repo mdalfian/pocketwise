@@ -95,6 +95,11 @@ html.dark .transaction-filter-sheet button { border-color: #35503b; background-c
 input[type="month"] {
   display: block;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
   min-height: 2.75rem;
   border: 1px solid #cbdac8;
   border-radius: 0.75rem;
@@ -110,7 +115,7 @@ input[type="month"] {
 }
 
 @media (min-width: 640px) {
-  input[type="month"] { width: 12rem; }
+  input[type="month"] { width: 12rem; max-width: 100%; }
 }
 
 input[type="month"]:focus {

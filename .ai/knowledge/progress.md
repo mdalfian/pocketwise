@@ -1,4 +1,10 @@
 ## 2026-08-31
+- Safari/iOS: memperbaiki filter bulan dengan `max-width`, `min-width`, `box-sizing`, dan appearance reset agar tidak melewati viewport.
+- PWA: menyamakan background native splash Android dengan warna brand dan mengganti status bar iOS dari translucent hitam ke default.
+- Catatan: splash native iOS/Android muncul sebelum JavaScript, jadi splash custom React tidak dapat menggantikan layar native pertama sepenuhnya.
+- Lint dan production build berhasil.
+
+## 2026-08-31
 - Mengganti ikon arrow pada akses cepat “Lihat laporan” dengan ikon grafik yang lebih relevan.
 - Memoles card ringkasan dashboard: padding mobile lebih lega, header responsif, grafik diberi panel latar, batang lebih proporsional, dan label bulan lebih rapi.
 - Lint dan production build berhasil.
