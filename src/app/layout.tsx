@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PwaSplash } from "@/components/pwa-splash";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +35,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col"><div className="fixed bottom-4 right-4 z-[9999]"><ThemeToggle /></div>{children}</body>
+      <head><Script id="theme-init" strategy="beforeInteractive">{`try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`}</Script></head>
+      <body className="min-h-full flex flex-col"><PwaSplash /><div className="fixed bottom-4 right-4 z-[9999]"><ThemeToggle /></div>{children}</body>
     </html>
   );
 }

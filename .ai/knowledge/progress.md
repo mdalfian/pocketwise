@@ -1,3 +1,51 @@
+## 2026-08-31
+- Mengganti ikon arrow pada akses cepat “Lihat laporan” dengan ikon grafik yang lebih relevan.
+- Memoles card ringkasan dashboard: padding mobile lebih lega, header responsif, grafik diberi panel latar, batang lebih proporsional, dan label bulan lebih rapi.
+- Lint dan production build berhasil.
+
+## 2026-08-31
+- Menambahkan redirect dinamis untuk catat transaksi menggunakan parameter `returnTo`: dari dashboard kembali ke dashboard, dari riwayat kembali ke riwayat.
+- Toast sukses sekarang dibersihkan setelah 4,5 detik, sehingga durasinya tidak langsung terpotong oleh pembersihan URL.
+
+## 2026-08-31
+- Toast sukses sekarang auto-dismiss setelah 4,5 detik.
+- Query parameter `message` otomatis dihapus dari URL setelah toast diproses, sehingga tidak muncul lagi saat refresh.
+- Lint berhasil.
+
+## 2026-08-31
+- Memperbaiki toast catat transaksi yang tidak muncul setelah redirect ke dashboard dengan meneruskan `searchParams.message` dari server page secara eksplisit ke `FormAlert`.
+- Lint dan build berhasil.
+
+## 2026-08-31
+- Memperbaiki toast setelah catat transaksi: server action kini redirect ke dashboard dengan `message=transaction-saved`, dan dashboard merender `FormAlert`.
+
+## 2026-08-31
+- Notifikasi sukses dari `FormAlert` sekarang tampil sebagai toast fixed di kanan atas desktop dan tetap nyaman di mobile.
+- Notifikasi error tetap inline agar dekat dengan konteks form.
+- Lint dan production build berhasil.
+
+## 2026-08-31
+- Memulai peningkatan UX tahap berikutnya: empty state rekening dan kategori sekarang lebih informatif serta menyediakan aksi langsung untuk menambah data.
+- Validasi lint dan production build berhasil.
+
+## 2026-08-31
+- Menambahkan loading skeleton khusus untuk accounts, categories, reports, recurring transactions, profile, form transaksi baru/edit, dan form rekening baru.
+- Semua skeleton berhasil melewati lint dan production build.
+
+## 2026-08-31
+- Menambahkan `src/app/dashboard/transactions/loading.tsx` agar navigasi kembali dari form catat transaksi ke riwayat transaksi menampilkan skeleton yang sesuai layout halaman, bukan layar kosong saat data sedang dimuat.
+
+## 2026-08-31
+- Memperbaiki syntax error di `src/app/dashboard/page.tsx` akibat deklarasi `QuickLink` lama yang tertinggal setelah refactor ikon akses cepat.
+
+## 2026-08-31
+- Audit UX halaman catat transaksi: jenis transaksi kini dipilih eksplisit (pengeluaran, pemasukan, transfer), kategori otomatis terfilter, dan helper text ditambahkan untuk nominal, saldo, transfer, serta transaksi berulang.
+- Audit akses cepat: jumlah menu tetap lima agar tidak makin ramai, tetapi setiap menu diberi ikon kontekstual dan focus state yang lebih jelas.
+
+## 2026-08-31
+- Riwayat transaksi sekarang mengurutkan transaksi berdasarkan tanggal transaksi terbaru, lalu `created_at` terbaru sebagai tie-breaker agar transaksi di tanggal yang sama tampil sesuai waktu dibuat.
+- CSV export memakai urutan yang sama.
+
 # Development Progress
 
 ## 2026-08-26
@@ -105,6 +153,12 @@
 - Made the budget field conditional in the category edit modal; it is hidden when the selected type is Pemasukan.
 - Restored the trash-can SVG icon and added explicit dark-mode styling for the desktop transaction filter panel.
 - Replaced the account creation page link with an inline dark-mode-compatible account creation modal; retained the old route as a fallback.
+- Expanded the dashboard cash-flow chart from 6 to 12 months with responsive twelve-point bar layout and updated period totals.
+- Restored the dashboard chart to 6 months and added period insights: monthly average expense, best surplus month, and highest expense month.
+- Added `/dashboard/reports` for monthly cashflow summaries, including income, expenses, net cashflow, transaction count, and category expense breakdown.
+- Added a visible `Lihat laporan` shortcut to the dashboard quick-access menu.
+- Refactored the dashboard into readable helper components and replaced quick-access text arrows with SVG icons.
+- Restored the dashboard topbar wallet logo and icon-only Profile/Logout buttons with accessible labels.
 - Prepared the Next.js configuration for production by limiting the Android LAN origin to development mode only.
 - Improved mobile/PWA theme-toggle touch behavior with a larger touch target, touch manipulation, and a higher non-blocking overlay layer.
 - Added migration `007_ensure_transfer_rpc.sql` to recreate and grant the transfer RPC safely when migration history says it is applied but the function is missing.
@@ -112,6 +166,33 @@
 - Fixed Next.js `themeColor` metadata warning by moving it to `viewport`, narrowed Supabase middleware matching to app routes, and added a dashboard loading skeleton for faster perceived navigation.
 - Cleaned transaction-history mojibake, restored account/category relation rendering through `relationName`, and simplified the shared back button label to `Kembali`.
 - Changed transaction edit/delete actions to accessible icon-only buttons matching category management, kept browser delete confirmation, and simplified mobile transaction cards.
+- Added a branded Pocketwise startup splash overlay with wallet icon, light/dark styling, and iOS-compatible app-shell behavior.
+- Differentiated dashboard quick-access cards in dark mode with a lighter green surface distinct from the balance card.
+- Increased the dark-mode quick-access card contrast further with a brighter green surface and hover state.
+- Added the recurring transactions database foundation with weekly/monthly schedules, ownership RLS, and automatic due processing when the dashboard opens.
+- Added recurring transaction setup fields to the new transaction form and persist the schedule after creating the initial transaction.
+- Added recurring transaction management page with active/inactive toggles, deletion, account/category context, and transaction-history navigation.
+- Added a direct dashboard Akses cepat shortcut to the recurring transactions management page.
+- Converted recurring schedule actions to compact icon-style pause and delete controls while retaining accessible text labels.
+- Added confirmation alerts and pending states for recurring activate/deactivate and delete actions.
+- Added current-month budget usage and safe/warning/over-budget indicators directly to category cards.
+- Polished category budget progress with percentage labels, color-coded progress bars, status text, and spent totals.
+- Added filtered CSV export for transactions with user-scoped data and UTF-8 compatibility.
+- Polished transaction page action button layout for clearer responsive grouping and consistent row controls.
+- Refined transaction header actions with cohesive SVG icons, shorter labels, and improved responsive spacing.
+- Simplified transaction header actions and added dark-mode styling for the mobile filter sheet.
+- Removed the mobile filter wrapper container and refined download/add transaction button sizing and alignment.
+- Moved the CSV download control beside the transaction filter with responsive desktop-safe sizing.
+- Positioned CSV download beside the add-transaction button on desktop while retaining filter adjacency on mobile.
+- Fixed CSV export returning headers only by removing the nonexistent `notes` column from its query and rows.
+- Made CSV export more readable for everyday users with an Indonesian summary, translated transaction types, readable dates, and clearer headers.
+- Restored desktop corner positioning for transaction edit and delete controls without affecting mobile layout.
+- Updated the shared back control to return to browser history, with a dashboard fallback for direct visits.
+- Limited the custom PWA splash screen to the initial app session so normal client-side navigation does not show it again.
+- Polished the PWA splash screen with brand tagline, animated wallet mark, loading indicator, and subtle decorative orbs for light/dark mode.
+- Prevented the splash screen light-mode flash by adding an early system dark-mode fallback before the theme class hydrates.
+- Fixed splash theme initialization to use the same `theme` storage key as the theme toggle, preventing incorrect light/dark flashes when switching modes.
+- Replaced the shared dashboard back-link text arrow with an accessible SVG icon and polished the monthly report month filter styling, including dark mode.
 - Aligned desktop transaction edit/delete icons to the far right edge of each card while preserving mobile placement.
 - Confirmed transaction edit is better kept as a dedicated page for a full, reliable form; fixed the desktop action wrapper so right-edge positioning is active.
 - Moved desktop transaction actions to the lower-right corner to avoid covering the amount; retained the edit flow as a dedicated page.

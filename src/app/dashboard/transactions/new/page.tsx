@@ -5,7 +5,10 @@ import { FormAlert } from "@/components/form-alert";
 import { createClient } from "@/lib/supabase/server";
 import { TransactionForm } from "./transaction-form";
 
-export default async function NewTransactionPage() {
+type SearchParams = Promise<{ returnTo?: string }>;
+
+export default async function NewTransactionPage({ searchParams }: { searchParams: SearchParams }) {
+  const { returnTo } = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
@@ -26,7 +29,7 @@ export default async function NewTransactionPage() {
             <p className="mt-3 text-sm leading-6 text-[#718076]">Tambahkan transaksi agar kondisi keuanganmu tetap rapi.</p>
           </div>
           <div className="pt-6"><Suspense fallback={null}><FormAlert /></Suspense></div>
-          {accounts?.length ? <TransactionForm accounts={accounts} categories={categories ?? []} today={today} /> : <p className="pt-6 text-sm text-[#718076]">Buat rekening terlebih dahulu sebelum mencatat transaksi.</p>}
+          {accounts?.length ? <TransactionForm accounts={accounts} categories={categories ?? []} today={today} returnTo={returnTo} /> : <p className="pt-6 text-sm text-[#718076]">Buat rekening terlebih dahulu sebelum mencatat transaksi.</p>}
         </section>
       </div>
     </main>

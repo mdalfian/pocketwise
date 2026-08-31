@@ -1,0 +1,3 @@
+export default function NewTransactionLoading() {
+  return <main className="min-h-screen bg-[#f3f7f1] px-4 py-6 sm:px-6 sm:py-8"><div className="mx-auto max-w-xl animate-pulse"><div className="h-11 w-28 rounded-xl bg-[#dce8d9]" /><div className="mt-8 rounded-3xl bg-white p-6 sm:p-8"><div className="h-4 w-32 rounded bg-[#cfe0cb]" /><div className="mt-3 h-9 w-72 rounded-xl bg-[#dce8d9]" />{Array.from({ length: 6 }).map((_, i) => <div key={i} className="mt-5 h-12 rounded-xl bg-[#edf3eb]" />)}<div className="mt-6 flex justify-end gap-3"><div className="h-12 w-24 rounded-xl bg-[#edf3eb]" /><div className="h-12 w-40 rounded-xl bg-[#cfe0cb]" /></div></div></div></main>;
+}

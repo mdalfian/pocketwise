@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { transactionInputSchema } from "@/lib/validation/transaction";
 
 export async function createTransaction(formData: FormData) {
+  const requestedReturnTo = formData.get("returnTo");
+  const returnTo = typeof requestedReturnTo === "string" && requestedReturnTo.startsWith("/dashboard") ? requestedReturnTo : "/dashboard";
   const parsed = transactionInputSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) redirect("/dashboard/transactions/new?error=invalid-input");
 
@@ -42,7 +44,7 @@ export async function createTransaction(formData: FormData) {
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/accounts");
     revalidatePath("/dashboard/transactions");
-    redirect("/dashboard");
+    redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}message=transaction-saved`);
   }
 
   const { data: account } = await supabase.from("accounts").select("id").eq("id", parsed.data.accountId).eq("user_id", user.id).single();
@@ -63,10 +65,22 @@ export async function createTransaction(formData: FormData) {
   });
 
   if (error) redirect("/dashboard/transactions/new?error=save-failed");
+  if (formData.get("recurring") === "yes") {
+    const frequency = formData.get("frequency");
+    const nextRun = formData.get("nextRun");
+    const endDate = formData.get("endDate");
+    if ((frequency !== "weekly" && frequency !== "monthly") || typeof nextRun !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(nextRun)) redirect("/dashboard/transactions/new?error=invalid-input");
+    const scheduledDate = new Date(`${nextRun}T00:00:00`);
+    const transactionDate = new Date(`${parsed.data.transactionDate.toISOString().slice(0, 10)}T00:00:00`);
+    if (scheduledDate <= transactionDate) scheduledDate.setDate(scheduledDate.getDate() + (frequency === "weekly" ? 7 : 31));
+    const nextRunDate = scheduledDate.toISOString().slice(0, 10);
+    const { error: recurringError } = await supabase.from("recurring_transactions").insert({ user_id: user.id, account_id: parsed.data.accountId, category_id: parsed.data.categoryId || null, type: parsed.data.type, amount: parsed.data.amount, description, frequency, next_run: nextRunDate, end_date: typeof endDate === "string" && endDate ? endDate : null });
+    if (recurringError) redirect("/dashboard/transactions/new?error=save-failed");
+  }
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/accounts");
   revalidatePath("/dashboard/transactions");
-  redirect("/dashboard");
+  redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}message=transaction-saved`);
 }
 
 export async function deleteTransaction(formData: FormData) {

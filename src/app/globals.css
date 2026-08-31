@@ -32,6 +32,17 @@ body {
 }
 
 html.dark body { background: #101713; color: #edf5ee; }
+html.dark .pwa-splash { background: #101713; }
+html.dark .pwa-splash .text-\[\#173d2b\] { color: #d9eadb; }
+.pwa-splash-mark { animation: splash-mark-in 500ms cubic-bezier(.2,.8,.2,1) both; }
+.pwa-splash-orb { position: absolute; border-radius: 9999px; filter: blur(2px); opacity: .55; }
+.pwa-splash-orb-one { width: 18rem; height: 18rem; top: -7rem; right: -6rem; background: #d8f37d; }
+.pwa-splash-orb-two { width: 14rem; height: 14rem; bottom: -6rem; left: -5rem; background: #c9e3ca; }
+.pwa-splash-loader span { animation: splash-loader 900ms ease-in-out infinite; }
+@keyframes splash-mark-in { from { opacity: 0; transform: translateY(12px) scale(.88); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes splash-loader { from { transform: translateX(-100%); } to { transform: translateX(200%); } }
+html.dark .pwa-splash-orb-one { background: #385b32; }
+html.dark .pwa-splash-orb-two { background: #203328; }
 html.dark .bg-white, html.dark .bg-white\/80 { background-color: #18221b; }
 html.dark .bg-\[\#f3f7f1\] { background-color: #101713; }
 html.dark .bg-\[\#f7f8f5\] { background-color: #101713; }
@@ -62,6 +73,8 @@ html.dark .bg-\[\#f3f7f1\] { background-color: #1d2b21; }
 html.dark .bg-white { background-color: #18231c; }
 html.dark .bg-white\/80 { background-color: rgb(24 35 28 / 0.8); }
 html.dark .bg-white\/65 { background-color: rgb(24 35 28 / 0.65); }
+html.dark .quick-access-link { background-color: #3b6042; color: #e1efc4; }
+html.dark .quick-access-link:hover { background-color: #4a7450; }
 html.dark .text-\[\#173d2b\] { color: #d9eadb; }
 html.dark .text-\[\#385b32\] { color: #b9d9b7; }
 html.dark .text-\[\#526057\] { color: #c2d0c4; }
@@ -75,3 +88,35 @@ html.dark .transactions-filter-panel { background-color: #18231c; border-color: 
 html.dark .transactions-filter-panel select,
 html.dark .transactions-filter-panel input { background-color: #1d2b21; border-color: #35503b; color: #edf5ee; }
 html.dark .transactions-filter-panel option { background-color: #1d2b21; color: #edf5ee; }
+html.dark .transaction-filter-sheet { background-color: #18231c; }
+html.dark .transaction-filter-sheet p { color: #edf5ee; }
+html.dark .transaction-filter-sheet button { border-color: #35503b; background-color: #1d2b21; color: #edf5ee; }
+
+input[type="month"] {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid #cbdac8;
+  border-radius: 0.75rem;
+  background: #f7faf5;
+  color: #385b32;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+input[type="month"] {
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  input[type="month"] { width: 12rem; }
+}
+
+input[type="month"]:focus {
+  border-color: #6a9a5f;
+  box-shadow: 0 0 0 3px #d8f37d;
+}
+
+html.dark input[type="month"] { background: #1d2b21; border-color: #35503b; color: #edf5ee; }
+

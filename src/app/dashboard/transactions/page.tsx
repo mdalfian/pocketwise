@@ -14,6 +14,7 @@ type Transaction = {
   amount: number;
   description: string;
   transaction_date: string;
+  created_at: string;
   accounts: { name: string } | { name: string }[] | null;
   categories: { name: string } | { name: string }[] | null;
 };
@@ -30,7 +31,7 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
   if (!user) redirect("/login");
 
   const [{ data: rawTransactions }, { data: accounts }, { data: categories }] = await Promise.all([
-    supabase.from("transactions").select("id, type, amount, description, transaction_date, accounts(name), categories(name)").eq("user_id", user.id).order("transaction_date", { ascending: false }).limit(100),
+    supabase.from("transactions").select("id, type, amount, description, transaction_date, created_at, accounts(name), categories(name)").eq("user_id", user.id).order("transaction_date", { ascending: false }).order("created_at", { ascending: false }).limit(100),
     supabase.from("accounts").select("id, name").eq("user_id", user.id).order("name"),
     supabase.from("categories").select("id, name, kind").eq("user_id", user.id).order("name"),
   ]);
@@ -66,6 +67,9 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
       </div>
     </form>
   );
+  const exportParams = new URLSearchParams();
+  Object.entries(filters).forEach(([key, value]) => { if (value) exportParams.set(key, value); });
+  const exportHref = `/dashboard/transactions/export?${exportParams.toString()}`;
 
   return (
     <main className="min-h-screen bg-[#f3f7f1] px-4 py-6 text-[#17211b] sm:px-6 sm:py-8 lg:px-10">
@@ -73,9 +77,24 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
         <DashboardBackLink />
         <header className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div><p className="text-sm font-semibold uppercase tracking-[.18em] text-[#5e8a54]">Riwayat keuangan</p><h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Semua transaksi</h1><p className="mt-2 text-sm text-[#718076]">Temukan dan pahami setiap pergerakan uangmu.</p></div>
-          <Link href="/dashboard/transactions/new" className="inline-flex w-full items-center justify-center rounded-xl bg-[#173d2b] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#24573c] sm:w-auto">+ Catat transaksi</Link>
+          <div className="flex w-full items-center justify-end gap-2 sm:w-auto">
+            <a href={exportHref} aria-label="Download transaksi sebagai CSV" title="Download CSV" className="group hidden size-11 shrink-0 place-items-center rounded-xl border border-[#dce8d9] bg-white text-[#52754c] shadow-sm transition hover:-translate-y-0.5 hover:border-[#9fbd9c] hover:bg-[#f7faf5] sm:grid">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4 transition-transform group-hover:translate-y-0.5"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v11m0 0 4-4m-4 4-4-4M5 20h14" /></svg>
+            </a>
+            <Link href="/dashboard/transactions/new?returnTo=%2Fdashboard%2Ftransactions" className="inline-flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-[#173d2b] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#24573c] sm:min-w-44 sm:flex-none">
+              <span className="text-lg leading-none">+</span><span>Catat transaksi</span>
+            </Link>
+          </div>
         </header>
-        <div className="transactions-filter-panel mt-8 rounded-2xl border-0 bg-transparent p-0 shadow-none sm:border sm:border-[#dce8d9] sm:bg-white sm:p-5 sm:shadow-sm"><div className="mb-3 hidden text-sm font-semibold text-[#173d2b] sm:block">Filter transaksi</div><TransactionFilter>{filterForm}</TransactionFilter></div>
+        <div className="mt-8 flex items-start gap-2 sm:gap-3">
+          <div className="transactions-filter-panel min-w-0 flex-1 contents sm:block sm:rounded-2xl sm:border sm:border-[#dce8d9] sm:bg-white sm:p-5 sm:shadow-sm">
+            <div className="mb-3 hidden text-sm font-semibold text-[#173d2b] sm:block">Filter transaksi</div>
+            <TransactionFilter>{filterForm}</TransactionFilter>
+          </div>
+          <a href={exportHref} aria-label="Download transaksi sebagai CSV" title="Download CSV" className="mt-4 grid size-11 shrink-0 place-items-center rounded-xl border border-[#dce8d9] bg-white text-[#52754c] shadow-sm transition hover:-translate-y-0.5 hover:border-[#9fbd9c] hover:bg-[#f7faf5] sm:hidden">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v11m0 0 4-4m-4 4-4-4M5 20h14" /></svg>
+          </a>
+        </div>
         <div className="mt-4"><FormAlert /></div><div className="flex items-center justify-between text-sm text-[#718076]"><span>Menampilkan {items.length} transaksi</span><span className="hidden sm:inline">{format(income)} masuk - {format(expense)} keluar</span></div>
         <section className="mt-4 overflow-hidden rounded-3xl border border-[#e1e9df] bg-white shadow-sm">
            {items.length ? items.map((transaction) => <article key={transaction.id} className="relative border-b border-[#edf1ed] p-4 last:border-0 hover:bg-[#f7faf5] sm:grid sm:grid-cols-[1fr_10rem_8rem] sm:items-center sm:gap-3 sm:p-5 sm:pr-24"><div className="flex min-w-0 items-start gap-3"><span className={`grid size-9 shrink-0 place-items-center rounded-xl text-base ${transaction.type === "income" ? "bg-[#e8f6e8] text-[#3d8b53]" : "bg-[#fff0ed] text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"}</span><div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-3"><p className="truncate font-semibold">{transaction.description}</p><p className={`shrink-0 text-sm font-semibold sm:hidden ${transaction.type === "income" ? "text-[#3d8b53]" : "text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"}{format(Number(transaction.amount))}</p></div><p className="mt-1 truncate text-xs text-[#718076]">{relationName(transaction.accounts, "Rekening")} - {relationName(transaction.categories, transaction.type === "transfer" ? "Transfer antar rekening" : "Tanpa kategori")}</p><div className="mt-2 flex items-center justify-between"><p className="text-xs text-[#718076]">{new Date(`${transaction.transaction_date}T00:00:00`).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}</p><TransactionActions id={transaction.id} type={transaction.type} /></div></div></div><p className="hidden text-sm text-[#718076] sm:block">{new Date(`${transaction.transaction_date}T00:00:00`).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}</p><p className={`hidden text-right font-semibold sm:block ${transaction.type === "income" ? "text-[#3d8b53]" : "text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"} {format(Number(transaction.amount))}</p></article>) : <div className="p-10 text-center text-sm text-[#718076]">Tidak ada transaksi yang cocok.</div>}
