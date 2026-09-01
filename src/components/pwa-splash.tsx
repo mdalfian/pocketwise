@@ -3,19 +3,22 @@
 import { useEffect, useState } from "react";
 
 export function PwaSplash() {
-  const [visible, setVisible] = useState(false);
+  // Render the veil immediately so the page underneath never flashes before
+  // the client has had a chance to decide whether this is a new session.
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     try {
-      if (window.sessionStorage.getItem("pocketwise-splash-seen") === "1") return;
+      if (window.sessionStorage.getItem("pocketwise-splash-seen") === "1") {
+        const seenTimer = window.setTimeout(() => setVisible(false), 0);
+        return () => window.clearTimeout(seenTimer);
+      }
       window.sessionStorage.setItem("pocketwise-splash-seen", "1");
     } catch {
       // Continue showing the splash when storage is unavailable.
     }
-    const showTimer = window.setTimeout(() => setVisible(true), 0);
-    const hideTimer = window.setTimeout(() => setVisible(false), 650);
+    const hideTimer = window.setTimeout(() => setVisible(false), 900);
     return () => {
-      window.clearTimeout(showTimer);
       window.clearTimeout(hideTimer);
     };
   }, []);
@@ -23,7 +26,7 @@ export function PwaSplash() {
   if (!visible) return null;
 
   return (
-    <div aria-hidden="true" className="pwa-splash fixed inset-0 z-[10000] grid place-items-center overflow-hidden bg-[#f3f7f1] transition-opacity">
+    <div aria-hidden="true" className={`pwa-splash fixed inset-0 z-[10000] grid place-items-center overflow-hidden bg-[#f3f7f1] transition-opacity duration-300 ${visible ? "opacity-100" : "pointer-events-none opacity-0"}`}>
       <div className="pwa-splash-orb pwa-splash-orb-one" />
       <div className="pwa-splash-orb pwa-splash-orb-two" />
       <div className="relative flex flex-col items-center">

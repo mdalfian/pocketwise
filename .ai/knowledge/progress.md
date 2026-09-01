@@ -1,3 +1,15 @@
+## 2026-09-01 — PWA launch experience
+- Menghapus custom splash React berbasis timer agar tidak flash pada setiap navigasi dan tidak menutupi aplikasi dengan delay arbitrer.
+- Native PWA launch sekarang memakai branding `#173D2B`; loading state awal tetap ditangani route-level `loading.tsx` saat server/session state belum siap.
+- Manifest dilengkapi `id`, orientation, nama aplikasi lengkap, serta ikon 192/512 dan Apple Touch Icon.
+- Metadata Next.js dikonfigurasi untuk application name, Apple standalone mode, status bar, icon, theme color, dan light/dark color scheme.
+
+## 2026-09-01
+- Analisis splash: flash terjadi karena splash baru dirender setelah effect client berjalan, sementara native PWA memakai warna manifest yang berbeda.
+- Splash custom sekarang dirender sejak awal, fade-out setelah 900ms, dan tidak menampilkan ulang pada session yang sama.
+- Warna `themeColor`/`background_color` dikembalikan ke background aplikasi agar transisi native ke custom seamless.
+- Lint dan production build berhasil.
+
 ## 2026-08-31
 - Safari/iOS: memperbaiki filter bulan dengan `max-width`, `min-width`, `box-sizing`, dan appearance reset agar tidak melewati viewport.
 - PWA: menyamakan background native splash Android dengan warna brand dan mengganti status bar iOS dari translucent hitam ke default.

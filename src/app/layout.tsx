@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { PwaSplash } from "@/components/pwa-splash";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,13 +18,27 @@ export const metadata: Metadata = {
   title: "Pocketwise — Keuangan lebih jelas",
   description: "Cara yang lebih tenang untuk mengatur dan memahami uangmu.",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, statusBarStyle: "default", title: "Pocketwise" },
-  icons: { apple: "/icons/apple-touch-icon.png" },
+  applicationName: "Pocketwise",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Pocketwise",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#173d2b",
-  colorScheme: "light",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#173d2b" },
+    { media: "(prefers-color-scheme: dark)", color: "#173d2b" },
+  ],
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -36,7 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head><Script id="theme-init" strategy="beforeInteractive">{`try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`}</Script></head>
-      <body className="min-h-full flex flex-col"><PwaSplash /><div className="fixed bottom-4 right-4 z-[9999]"><ThemeToggle /></div>{children}</body>
+      <body className="min-h-full flex flex-col"><div className="fixed bottom-4 right-4 z-[9999]"><ThemeToggle /></div>{children}</body>
     </html>
   );
 }
