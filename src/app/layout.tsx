@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   applicationName: "Pocketwise",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "Pocketwise",
   },
   icons: {

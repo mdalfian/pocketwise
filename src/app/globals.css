@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f3f7f1;
   --foreground: #171717;
+}
+
+html,
+body {
+  background: #173d2b;
 }
 
 html.dark {
@@ -20,8 +25,8 @@ html.dark {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #101713;
+    --foreground: #edf5ee;
   }
 }
 
@@ -30,6 +35,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
 
 html.dark body { background: #101713; color: #edf5ee; }
 html.dark .pwa-splash { background: #101713; }
@@ -91,6 +97,29 @@ html.dark .transactions-filter-panel option { background-color: #1d2b21; color: 
 html.dark .transaction-filter-sheet { background-color: #18231c; }
 html.dark .transaction-filter-sheet p { color: #edf5ee; }
 html.dark .transaction-filter-sheet button { border-color: #35503b; background-color: #1d2b21; color: #edf5ee; }
+html.dark .dashboard-insight-card { border-color: #38563d; background: #1d3324; }
+html.dark .dashboard-insight-card > div { background: #385b32; color: #edf5ee; }
+html.dark .dashboard-insight-card p { color: #a9c8aa; }
+html.dark .dashboard-insight-card h2 { color: #edf5ee; }
+html.dark .dashboard-insight-card a { color: #d8f37d; }
+html.dark .bg-\[\#f7f8f5\] { background-color: #101713; }
+html.dark .bg-\[\#edf1ed\], html.dark .bg-\[\#e6eee4\] { background-color: #24352a; }
+html.dark .bg-\[\#eef8ee\] { background-color: #1f3827; }
+html.dark .bg-\[\#f1f3f0\] { background-color: #26332a; }
+html.dark [class*="border-[#edf1ed]"], html.dark [class*="border-[#e6eee4]"], html.dark [class*="border-[#cbdac8]"] { border-color: #38503d; }
+html.dark [class*="border-dashed"] { border-color: #46634a; }
+main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8 article.rounded-3xl {
+  border: 1px solid #e1e9df;
+}
+main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8 article.rounded-3xl:hover {
+  border-color: #cbdac8;
+}
+html.dark main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8 article.rounded-3xl {
+  border-color: #304235;
+}
+html.dark main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8 article.rounded-3xl:hover {
+  border-color: #527b58;
+}
 
 input[type="month"] {
   display: block;

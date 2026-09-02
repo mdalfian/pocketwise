@@ -1,3 +1,119 @@
+## 2026-09-02 — Polish card rekening
+- Menambahkan border halus dan hover state pada card rekening.
+- Border dark mode disesuaikan agar tetap terlihat tanpa terlalu kontras.
+
+## 2026-09-02 — Konsistensi background halaman rekening
+- Background halaman rekening disamakan dengan halaman dashboard lain menggunakan surface hijau yang konsisten.
+- Menghindari background dark mode yang terlalu gelap seperti hitam pada halaman rekening.
+
+## 2026-09-02 — Konsistensi dark mode dashboard
+- Merapikan warna surface dan border halaman dashboard sekunder melalui override dark mode.
+- State kategori, status aktif/nonaktif, empty state, dan loading surface kini lebih konsisten.
+- Lint dan production build berhasil.
+
+## 2026-09-02 — Polish filter dan insight dashboard
+- Layout filter riwayat transaksi dirapikan dengan label field, alignment konsisten, dan tombol sejajar.
+- Tombol filter mobile tidak lagi memiliki jarak atas ganda.
+- Kartu Insight dashboard diberi hierarchy visual, ikon, border, dan link yang lebih rapi.
+- Menambahkan override khusus dark mode agar kartu Insight tidak tampil putih/kontras aneh.
+- Lint dan production build berhasil.
+
+## 2026-09-02 — Dashboard analytics
+- Dashboard sekarang mengambil relasi kategori transaksi.
+- Ditambahkan visual pengeluaran berdasarkan lima kategori terbesar.
+- Ditambahkan insight otomatis untuk kategori dengan pengeluaran terbesar.
+- Menyediakan fallback ketika belum ada pengeluaran yang dapat dianalisis.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Kontras filter light/dark mode
+- Tombol filter mobile tidak lagi bergantung pada warna hardcoded yang sama untuk kedua tema.
+- Light mode memakai permukaan putih dan highlight hijau lembut.
+- Dark mode memakai permukaan hijau gelap, border kontras, dan teks terang.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Polish tombol filter
+- Menghapus titik indikator yang terasa mengganggu.
+- Status filter aktif kini memakai kombinasi border hijau, background tint, dan ring shadow yang halus.
+- Menambahkan `aria-pressed` untuk status tombol yang lebih aksesibel.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Highlight filter minimal
+- Label teks indikator filter aktif dihapus.
+- Tombol mobile hanya memakai highlight hijau dan titik kecil sebagai penanda visual.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Refinement indikator filter
+- Badge angka pada tombol filter mobile dihapus karena terlalu ramai.
+- Diganti indikator minimal berupa titik hijau dan label `Aktif`, dengan perubahan warna tombol tetap dipertahankan.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Indikator filter mobile
+- Tombol Filter pada mobile kini berubah warna saat filter aktif.
+- Ditambahkan badge jumlah filter aktif, misalnya `2 aktif`.
+- Perhitungan mengecualikan pilihan default `Semua jenis`.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Audit responsive dialog
+- Footer seluruh `AlertDialog` kini memakai `items-stretch` pada mobile agar tombol aksi full-width dan konsisten.
+- Pada desktop alignment kembali horizontal dan auto-width.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Tombol hapus modal kategori
+- Tombol `Hapus kategori` pada modal konfirmasi dibuat full-width di mobile agar konsisten dengan tombol `Batal`.
+- Form pembungkus tombol juga diberi lebar penuh pada mobile dan kembali auto-width di desktop.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Format budget pada edit kategori
+- Field `Budget bulan ini` di modal Edit kategori kini memformat nominal otomatis dengan pemisah ribuan Indonesia.
+- Nilai terformat hanya untuk tampilan; hidden input mengirim angka mentah ke server.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Format Rupiah budget
+- Merefactor `src/app/dashboard/budgets/page.tsx` dan mengintegrasikan `BudgetAmountInput`.
+- Field budget menampilkan pemisah ribuan Indonesia secara otomatis, sementara server menerima angka mentah.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Blur modal edit kategori
+- Backdrop modal edit kategori diperkuat dari transparansi ringan menjadi `bg-[#173d2b]/40` dengan `backdrop-blur-md`.
+
+## 2026-09-01 — Transaction list empty state
+- Empty state daftar transaksi sekarang lebih informatif dan memiliki CTA `Reset filter` serta `Catat transaksi`.
+- Pesan empty state menjelaskan apakah pengguna perlu mengubah filter atau membuat transaksi baru.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — UX form transaksi
+- Input jumlah transaksi sekarang memformat angka otomatis ke format Rupiah saat diketik.
+- Nilai raw angka tetap dikirim melalui hidden input agar kompatibel dengan validasi server.
+- Pending submit button tetap mencegah double submit.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Transaction return path
+- Semua error pada `createTransaction` sekarang kembali ke `returnTo`, bukan selalu ke form transaksi baru.
+- Tombol Batal pada form transaksi mengikuti halaman asal.
+- Redirect sukses tetap membawa toast `transaction-saved` ke halaman tujuan.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Glass summary lebih terlihat
+- Memperkuat transparansi panel Ringkasan dengan gradient hijau/lime halus, highlight border, inset shine, dan shadow.
+- Class glass diterapkan lewat selector dashboard agar tidak kalah oleh utility `bg-white` lama saat development.
+
+## 2026-09-01 — Dashboard glass visibility fix
+- Memastikan header, panel ringkasan, dan kartu saldo dashboard benar-benar menerima glass styling melalui selector khusus.
+- Memperbaiki implementasi sebelumnya yang hanya terlihat pada summary/chart sehingga perubahan visual terasa belum berubah.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Glassmorphism dashboard
+- Menambahkan token `.glass-surface` dan `.glass-surface-strong` dengan blur, border transparan, shadow lembut, serta fallback browser.
+- Menerapkan glass styling pada summary cards dan cashflow chart dashboard.
+- Quick access links juga memakai glass surface tanpa mengubah struktur atau alur navigasi.
+- Dark mode memiliki override khusus agar kontras dan keterbacaan tetap terjaga.
+- Lint dan production build berhasil.
+
+## 2026-09-01 — Perbaikan layar hitam saat launch
+- Menetapkan background `html` dan `body` ke brand green `#173d2b` pada fase awal agar area viewport tidak fallback ke hitam sebelum CSS aplikasi ter-render.
+- Mengubah Apple status bar ke `default` agar iOS tidak memaksakan kombinasi translucent/gelap yang terasa seperti layar hitam.
+- Background aplikasi tetap mengikuti theme melalui `--background` setelah halaman ter-render.
+
 ## 2026-09-01 — PWA launch experience
 - Menghapus custom splash React berbasis timer agar tidak flash pada setiap navigasi dan tidak menutupi aplikasi dengan delay arbitrer.
 - Native PWA launch sekarang memakai branding `#173D2B`; loading state awal tetap ditangani route-level `loading.tsx` saat server/session state belum siap.

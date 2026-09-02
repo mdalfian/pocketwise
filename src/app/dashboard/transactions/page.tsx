@@ -47,21 +47,22 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
   const income = items.filter((item) => item.type === "income").reduce((sum, item) => sum + Number(item.amount), 0);
   const expense = items.filter((item) => item.type === "expense").reduce((sum, item) => sum + Number(item.amount), 0);
   const format = (amount: number) => `Rp ${amount.toLocaleString("id-ID")}`;
+  const activeFilterCount = [filters.search, filters.type && filters.type !== "all" ? filters.type : "", filters.account, filters.category, filters.from, filters.to].filter(Boolean).length;
   const filterForm = (
-    <form key={JSON.stringify(filters)} action="/dashboard/transactions" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-      <input type="search" name="search" defaultValue={filters.search} placeholder="Cari transaksi..." aria-label="Cari transaksi" className="rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm lg:col-span-2" />
-      <select name="type" defaultValue={filters.type ?? "all"} className="rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm">
+    <form key={JSON.stringify(filters)} action="/dashboard/transactions" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6 lg:items-end">
+      <label className="text-xs font-semibold text-[#718076] sm:col-span-2 lg:col-span-2">Cari transaksi<input type="search" name="search" defaultValue={filters.search} placeholder="Deskripsi, rekening, kategori..." aria-label="Cari transaksi" className="mt-1.5 w-full rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm" /></label>
+      <label className="text-xs font-semibold text-[#718076]">Jenis<select name="type" defaultValue={filters.type ?? "all"} className="mt-1.5 w-full rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm">
         <option value="all">Semua jenis</option><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option><option value="transfer">Transfer</option>
-      </select>
-      <select name="category" defaultValue={filters.category ?? ""} className="rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm">
+      </select></label>
+      <label className="text-xs font-semibold text-[#718076]">Kategori<select name="category" defaultValue={filters.category ?? ""} className="mt-1.5 w-full rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm">
         <option value="">Semua kategori</option>{categories?.map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}
-      </select>
-      <select name="account" defaultValue={filters.account ?? ""} className="rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm">
+      </select></label>
+      <label className="text-xs font-semibold text-[#718076]">Rekening<select name="account" defaultValue={filters.account ?? ""} className="mt-1.5 w-full rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm">
         <option value="">Semua rekening</option>{accounts?.map((account) => <option key={account.id} value={account.name}>{account.name}</option>)}
-      </select>
-      <input type="date" name="from" defaultValue={filters.from} aria-label="Tanggal mulai" className="rounded-xl border border-[#dce3dc] px-3 py-2.5 text-sm" />
-      <input type="date" name="to" defaultValue={filters.to} aria-label="Tanggal akhir" className="rounded-xl border border-[#dce3dc] px-3 py-2.5 text-sm" />
-      <div className="flex gap-2 lg:col-span-2">
+      </select></label>
+      <label className="text-xs font-semibold text-[#718076]">Dari<input type="date" name="from" defaultValue={filters.from} aria-label="Tanggal mulai" className="mt-1.5 w-full rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm" /></label>
+      <label className="text-xs font-semibold text-[#718076]">Sampai<input type="date" name="to" defaultValue={filters.to} aria-label="Tanggal akhir" className="mt-1.5 w-full rounded-xl border border-[#dce3dc] bg-white px-3 py-2.5 text-sm" /></label>
+      <div className="flex gap-2 sm:col-span-2 lg:col-span-2">
         <button type="submit" className="flex-1 cursor-pointer rounded-xl bg-[#173d2b] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#24573c] hover:shadow-md active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[#d8f37d] focus:ring-offset-2">Terapkan filter</button>
         <Link href="/dashboard/transactions" className="inline-flex items-center justify-center rounded-xl border border-[#dce3dc] bg-white px-4 py-2.5 text-sm font-semibold text-[#385b32] transition hover:bg-[#f7faf5]">Reset</Link>
       </div>
@@ -86,10 +87,10 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
             </Link>
           </div>
         </header>
-        <div className="mt-8 flex items-start gap-2 sm:gap-3">
+        <div className="mt-8 flex items-center gap-2 sm:gap-3">
           <div className="transactions-filter-panel min-w-0 flex-1 contents sm:block sm:rounded-2xl sm:border sm:border-[#dce8d9] sm:bg-white sm:p-5 sm:shadow-sm">
             <div className="mb-3 hidden text-sm font-semibold text-[#173d2b] sm:block">Filter transaksi</div>
-            <TransactionFilter>{filterForm}</TransactionFilter>
+            <TransactionFilter activeCount={activeFilterCount}>{filterForm}</TransactionFilter>
           </div>
           <a href={exportHref} aria-label="Download transaksi sebagai CSV" title="Download CSV" className="mt-4 grid size-11 shrink-0 place-items-center rounded-xl border border-[#dce8d9] bg-white text-[#52754c] shadow-sm transition hover:-translate-y-0.5 hover:border-[#9fbd9c] hover:bg-[#f7faf5] sm:hidden">
             <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v11m0 0 4-4m-4 4-4-4M5 20h14" /></svg>
@@ -97,7 +98,7 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
         </div>
         <div className="mt-4"><FormAlert /></div><div className="flex items-center justify-between text-sm text-[#718076]"><span>Menampilkan {items.length} transaksi</span><span className="hidden sm:inline">{format(income)} masuk - {format(expense)} keluar</span></div>
         <section className="mt-4 overflow-hidden rounded-3xl border border-[#e1e9df] bg-white shadow-sm">
-           {items.length ? items.map((transaction) => <article key={transaction.id} className="relative border-b border-[#edf1ed] p-4 last:border-0 hover:bg-[#f7faf5] sm:grid sm:grid-cols-[1fr_10rem_8rem] sm:items-center sm:gap-3 sm:p-5 sm:pr-24"><div className="flex min-w-0 items-start gap-3"><span className={`grid size-9 shrink-0 place-items-center rounded-xl text-base ${transaction.type === "income" ? "bg-[#e8f6e8] text-[#3d8b53]" : "bg-[#fff0ed] text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"}</span><div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-3"><p className="truncate font-semibold">{transaction.description}</p><p className={`shrink-0 text-sm font-semibold sm:hidden ${transaction.type === "income" ? "text-[#3d8b53]" : "text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"}{format(Number(transaction.amount))}</p></div><p className="mt-1 truncate text-xs text-[#718076]">{relationName(transaction.accounts, "Rekening")} - {relationName(transaction.categories, transaction.type === "transfer" ? "Transfer antar rekening" : "Tanpa kategori")}</p><div className="mt-2 flex items-center justify-between"><p className="text-xs text-[#718076]">{new Date(`${transaction.transaction_date}T00:00:00`).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}</p><TransactionActions id={transaction.id} type={transaction.type} /></div></div></div><p className="hidden text-sm text-[#718076] sm:block">{new Date(`${transaction.transaction_date}T00:00:00`).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}</p><p className={`hidden text-right font-semibold sm:block ${transaction.type === "income" ? "text-[#3d8b53]" : "text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"} {format(Number(transaction.amount))}</p></article>) : <div className="p-10 text-center text-sm text-[#718076]">Tidak ada transaksi yang cocok.</div>}
+           {items.length ? items.map((transaction) => <article key={transaction.id} className="relative border-b border-[#edf1ed] p-4 last:border-0 hover:bg-[#f7faf5] sm:grid sm:grid-cols-[1fr_10rem_8rem] sm:items-center sm:gap-3 sm:p-5 sm:pr-24"><div className="flex min-w-0 items-start gap-3"><span className={`grid size-9 shrink-0 place-items-center rounded-xl text-base ${transaction.type === "income" ? "bg-[#e8f6e8] text-[#3d8b53]" : "bg-[#fff0ed] text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"}</span><div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-3"><p className="truncate font-semibold">{transaction.description}</p><p className={`shrink-0 text-sm font-semibold sm:hidden ${transaction.type === "income" ? "text-[#3d8b53]" : "text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"}{format(Number(transaction.amount))}</p></div><p className="mt-1 truncate text-xs text-[#718076]">{relationName(transaction.accounts, "Rekening")} - {relationName(transaction.categories, transaction.type === "transfer" ? "Transfer antar rekening" : "Tanpa kategori")}</p><div className="mt-2 flex items-center justify-between"><p className="text-xs text-[#718076]">{new Date(`${transaction.transaction_date}T00:00:00`).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}</p><TransactionActions id={transaction.id} type={transaction.type} /></div></div></div><p className="hidden text-sm text-[#718076] sm:block">{new Date(`${transaction.transaction_date}T00:00:00`).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}</p><p className={`hidden text-right font-semibold sm:block ${transaction.type === "income" ? "text-[#3d8b53]" : "text-[#c25a4b]"}`}>{transaction.type === "income" ? "+" : "-"} {format(Number(transaction.amount))}</p></article>) : <div className="flex flex-col items-center p-10 text-center"><div className="grid size-12 place-items-center rounded-2xl bg-[#f7faf5] text-xl text-[#6a9a5f]">⌕</div><h2 className="mt-4 font-semibold text-[#173d2b]">Belum ada transaksi yang cocok</h2><p className="mt-2 max-w-sm text-sm leading-6 text-[#718076]">Coba ubah filter pencarian atau catat transaksi baru untuk mulai melihat riwayat keuanganmu.</p><div className="mt-5 flex flex-col gap-2 sm:flex-row"><Link href="/dashboard/transactions" className="rounded-xl border border-[#dce3dc] px-4 py-2.5 text-sm font-semibold text-[#385b32] hover:bg-[#f7faf5]">Reset filter</Link><Link href="/dashboard/transactions/new?returnTo=%2Fdashboard%2Ftransactions" className="rounded-xl bg-[#173d2b] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#24573c]">Catat transaksi</Link></div></div>}
         </section>
       </div>
     </main>

@@ -8,8 +8,10 @@ import { transactionInputSchema } from "@/lib/validation/transaction";
 export async function createTransaction(formData: FormData) {
   const requestedReturnTo = formData.get("returnTo");
   const returnTo = typeof requestedReturnTo === "string" && requestedReturnTo.startsWith("/dashboard") ? requestedReturnTo : "/dashboard";
+  const withError = (error: string): never => redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}error=${error}`);
   const parsed = transactionInputSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) redirect("/dashboard/transactions/new?error=invalid-input");
+  if (!parsed.success) withError("invalid-input");
+  const transaction = parsed.data!;
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -17,29 +19,29 @@ export async function createTransaction(formData: FormData) {
 
   // The database requires a non-empty description, while the form makes it optional.
   // Keep the field optional for users but always send a valid value to the RPC.
-  const description = parsed.data.description || "Transaksi";
+  const description = transaction.description || "Transaksi";
 
-  if (parsed.data.type === "transfer") {
-    const toAccountId = parsed.data.toAccountId;
-    if (!toAccountId || toAccountId === parsed.data.accountId) redirect("/dashboard/transactions/new?error=invalid-transfer");
+  if (transaction.type === "transfer") {
+    const toAccountId = transaction.toAccountId;
+    if (!toAccountId || toAccountId === transaction.accountId) withError("invalid-transfer");
     const { data: transferAccounts } = await supabase
       .from("accounts")
       .select("id")
-      .in("id", [parsed.data.accountId, toAccountId])
+      .in("id", [transaction.accountId, toAccountId])
       .eq("user_id", user.id);
-    if (!transferAccounts || transferAccounts.length !== 2) redirect("/dashboard/transactions/new?error=account-not-found");
+    if (!transferAccounts || transferAccounts.length !== 2) withError("account-not-found");
     const { error } = await supabase.rpc("create_transfer_and_update_balances", {
-      p_from_account_id: parsed.data.accountId,
+      p_from_account_id: transaction.accountId,
       p_to_account_id: toAccountId,
-      p_amount: parsed.data.amount,
+      p_amount: transaction.amount,
       p_description: description,
-      p_transaction_date: parsed.data.transactionDate.toISOString().slice(0, 10),
+      p_transaction_date: transaction.transactionDate.toISOString().slice(0, 10),
     });
     if (error) {
       console.error("Transfer transaction failed:", error);
       const message = error.message.toLowerCase();
       const errorKey = message.includes("insufficient") ? "insufficient-balance" : message.includes("function") ? "transfer-not-ready" : "save-failed";
-      redirect(`/dashboard/transactions/new?error=${errorKey}`);
+      withError(errorKey);
     }
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/accounts");
@@ -47,35 +49,35 @@ export async function createTransaction(formData: FormData) {
     redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}message=transaction-saved`);
   }
 
-  const { data: account } = await supabase.from("accounts").select("id").eq("id", parsed.data.accountId).eq("user_id", user.id).single();
-  if (!account) redirect("/dashboard/transactions/new?error=account-not-found");
+  const { data: account } = await supabase.from("accounts").select("id").eq("id", transaction.accountId).eq("user_id", user.id).single();
+  if (!account) withError("account-not-found");
 
-  if (parsed.data.categoryId) {
-    const { data: category } = await supabase.from("categories").select("id").eq("id", parsed.data.categoryId).eq("user_id", user.id).single();
-    if (!category) redirect("/dashboard/transactions/new?error=category-not-found");
+  if (transaction.categoryId) {
+    const { data: category } = await supabase.from("categories").select("id").eq("id", transaction.categoryId).eq("user_id", user.id).single();
+    if (!category) withError("category-not-found");
   }
 
   const { error } = await supabase.rpc("create_transaction_and_update_balance", {
-    p_account_id: parsed.data.accountId,
-    p_category_id: parsed.data.categoryId || null,
-    p_type: parsed.data.type,
-    p_amount: parsed.data.amount,
+    p_account_id: transaction.accountId,
+    p_category_id: transaction.categoryId || null,
+    p_type: transaction.type,
+    p_amount: transaction.amount,
     p_description: description,
-    p_transaction_date: parsed.data.transactionDate.toISOString().slice(0, 10),
+    p_transaction_date: transaction.transactionDate.toISOString().slice(0, 10),
   });
 
-  if (error) redirect("/dashboard/transactions/new?error=save-failed");
+  if (error) withError("save-failed");
   if (formData.get("recurring") === "yes") {
     const frequency = formData.get("frequency");
     const nextRun = formData.get("nextRun");
     const endDate = formData.get("endDate");
-    if ((frequency !== "weekly" && frequency !== "monthly") || typeof nextRun !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(nextRun)) redirect("/dashboard/transactions/new?error=invalid-input");
+    if ((frequency !== "weekly" && frequency !== "monthly") || typeof nextRun !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(nextRun)) withError("invalid-input");
     const scheduledDate = new Date(`${nextRun}T00:00:00`);
-    const transactionDate = new Date(`${parsed.data.transactionDate.toISOString().slice(0, 10)}T00:00:00`);
+    const transactionDate = new Date(`${transaction.transactionDate.toISOString().slice(0, 10)}T00:00:00`);
     if (scheduledDate <= transactionDate) scheduledDate.setDate(scheduledDate.getDate() + (frequency === "weekly" ? 7 : 31));
     const nextRunDate = scheduledDate.toISOString().slice(0, 10);
-    const { error: recurringError } = await supabase.from("recurring_transactions").insert({ user_id: user.id, account_id: parsed.data.accountId, category_id: parsed.data.categoryId || null, type: parsed.data.type, amount: parsed.data.amount, description, frequency, next_run: nextRunDate, end_date: typeof endDate === "string" && endDate ? endDate : null });
-    if (recurringError) redirect("/dashboard/transactions/new?error=save-failed");
+    const { error: recurringError } = await supabase.from("recurring_transactions").insert({ user_id: user.id, account_id: transaction.accountId, category_id: transaction.categoryId || null, type: transaction.type, amount: transaction.amount, description, frequency, next_run: nextRunDate, end_date: typeof endDate === "string" && endDate ? endDate : null });
+    if (recurringError) withError("save-failed");
   }
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/accounts");
