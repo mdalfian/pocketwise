@@ -60,6 +60,7 @@ export async function createTransaction(formData: FormData) {
   const { error } = await supabase.rpc("create_transaction_and_update_balance", {
     p_account_id: transaction.accountId,
     p_category_id: transaction.categoryId || null,
+    p_group_id: transaction.groupId || null,
     p_type: transaction.type,
     p_amount: transaction.amount,
     p_description: description,

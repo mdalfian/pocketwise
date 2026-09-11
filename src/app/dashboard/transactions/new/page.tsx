@@ -5,16 +5,17 @@ import { FormAlert } from "@/components/form-alert";
 import { createClient } from "@/lib/supabase/server";
 import { TransactionForm } from "./transaction-form";
 
-type SearchParams = Promise<{ returnTo?: string }>;
+type SearchParams = Promise<{ returnTo?: string; groupId?: string }>;
 
 export default async function NewTransactionPage({ searchParams }: { searchParams: SearchParams }) {
-  const { returnTo } = await searchParams;
+  const { returnTo, groupId } = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const [{ data: accounts }, { data: categories }] = await Promise.all([
+  const [{ data: accounts }, { data: categories }, { data: selectedGroup }] = await Promise.all([
     supabase.from("accounts").select("id, name, balance, currency").eq("user_id", user.id).order("name"),
     supabase.from("categories").select("id, name, kind").eq("user_id", user.id).order("name"),
+    groupId ? supabase.from("transaction_groups").select("id, name, color").eq("id", groupId).eq("user_id", user.id).maybeSingle() : Promise.resolve({ data: null }),
   ]);
   const today = new Date().toISOString().slice(0, 10);
 
@@ -29,7 +30,7 @@ export default async function NewTransactionPage({ searchParams }: { searchParam
             <p className="mt-3 text-sm leading-6 text-[#718076]">Tambahkan transaksi agar kondisi keuanganmu tetap rapi.</p>
           </div>
           <div className="pt-6"><Suspense fallback={null}><FormAlert /></Suspense></div>
-          {accounts?.length ? <TransactionForm accounts={accounts} categories={categories ?? []} today={today} returnTo={returnTo} /> : <p className="pt-6 text-sm text-[#718076]">Buat rekening terlebih dahulu sebelum mencatat transaksi.</p>}
+          {accounts?.length ? <TransactionForm accounts={accounts} categories={categories ?? []} selectedGroup={selectedGroup} selectedGroupId={groupId} today={today} returnTo={returnTo} /> : <p className="pt-6 text-sm text-[#718076]">Buat rekening terlebih dahulu sebelum mencatat transaksi.</p>}
         </section>
       </div>
     </main>

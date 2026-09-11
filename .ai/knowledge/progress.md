@@ -1,3 +1,110 @@
+## 2026-09-08 — Fix dark variant detail grup
+- Menganalisis halaman rekening dan transaksi sebagai referensi.
+- Menetapkan custom Tailwind dark variant berbasis class `.dark`, bukan preferensi sistem.
+- Light mode kini tidak lagi terkena style `dark:` saat class `.dark` tidak aktif.
+- Build berhasil.
+
+## 2026-09-08 — Fix toggle light mode
+- Menghapus fallback `prefers-color-scheme` yang memaksa theme kembali gelap saat OS menggunakan dark mode.
+- Background root sekarang mengikuti CSS variable theme.
+- Pilihan light/dark dari pengguna tetap tersimpan melalui localStorage.
+- Build berhasil.
+
+## 2026-09-08 — Redesign detail grup light/dark mode
+- Menata ulang seluruh halaman detail grup, bukan hanya background.
+- Header, summary cards, daftar transaksi, teks, border, CTA, dan empty state kini memiliki warna eksplisit untuk light dan dark mode.
+- Menambahkan metrik saldo bersih agar ringkasan lebih informatif.
+- Build berhasil.
+
+## 2026-09-08 — Background light mode detail grup
+- Background hero detail grup pada light mode diubah menjadi putih.
+- Dark mode tidak diubah.
+
+## 2026-09-08 — Kembalikan polish header detail grup
+- Menambahkan kembali gradient lembut, shadow, dan dekorasi visual header pada light mode.
+- Dark mode tetap menggunakan background hero sebelumnya.
+
+## 2026-09-08 — Fix parser detail grup
+- Memperbaiki ekspresi JSX summary cards yang menyebabkan error `Expected '</', got '}'`.
+- Production build berhasil setelah perbaikan.
+
+## 2026-09-08 — Perbaikan light mode detail grup
+- Header detail grup menggunakan surface hijau muda, border halus, dan teks gelap pada light mode.
+- Tombol CTA dibuat kontras; dark mode tetap memakai hero hijau gelap.
+## 2026-09-08 — Polish header detail grup
+- Header detail grup dibuat lebih user-friendly dengan hero section berwarna brand.
+- Menambahkan periode yang diformat lokal, deskripsi yang lebih informatif, dekorasi warna grup, dan CTA tambah transaksi yang lebih jelas.
+- Ringkasan transaksi dan daftar aktivitas tetap ditampilkan di bawah header.
+
+## 2026-09-07 — Template import CSV Supabase
+- Menambahkan `supabase/import-templates/transaction_groups.csv`.
+- Menambahkan `supabase/import-templates/transactions.csv`.
+- Menambahkan README berisi urutan import, UUID yang diperlukan, enum valid, dan catatan saldo rekening.
+
+## 2026-09-07 — Seeder transaksi grup
+- Menambahkan `supabase/seed.sql` untuk membuat data demo grup `Trip Semarang`.
+- Seeder membuat rekening, kategori, grup, dan dua transaksi yang terhubung ke grup.
+- Seeder aman dijalankan ulang untuk data demo berdasarkan nama dan deskripsi transaksi.
+
+## 2026-09-07 — Polish konteks grup transaksi
+- Menghapus label “Otomatis dipakai” dari form transaksi.
+- Banner grup aktif dipoles dengan ikon, warna grup, border, shadow, dan dukungan dark mode.
+
+## 2026-09-07 — Konteks grup pada transaksi
+- Form Catat Transaksi dari kartu grup sekarang menampilkan nama dan warna grup aktif.
+- Group ID tetap dikirim secara hidden agar user tidak perlu memilih grup manual.
+- Validasi ownership grup dilakukan saat mengambil konteks halaman.
+
+## 2026-09-07 — Tambah transaksi dari grup
+- Menambahkan tombol tambah transaksi pada setiap kartu grup.
+- Tombol membawa `groupId` secara internal sehingga user tidak perlu memilih grup manual.
+- Tombol hapus grup diganti menjadi ikon trash dengan label aksesibilitas.
+- Lint dan production build berhasil.
+
+## 2026-09-07 — Konsistensi modal dan empty state grup
+- Style modal grup disamakan dengan modal kategori dan rekening.
+- Overlay, ukuran panel, tombol close, input, serta tombol aksi dibuat konsisten.
+- Empty state grup diberi styling dark mode agar surface, border, dan teks tetap terbaca.
+
+## 2026-09-07 — Polish halaman grup transaksi
+- Form pembuatan grup dipindah dari halaman utama ke modal.
+- Halaman grup sekarang fokus pada daftar dan ringkasan transaksi tiap grup.
+- Layout halaman grup dipecah menjadi struktur JSX yang lebih mudah dirawat.
+- Lint dan production build berhasil.
+
+## 2026-09-07 — Perbaikan error Catat Transaksi
+- Menghapus `groupId` dari schema transaksi karena field Grup transaksi sudah tidak ada di form.
+- RPC transaksi baru sekarang mengirim `p_group_id: null` secara eksplisit.
+- Lint dan production build berhasil.
+
+## 2026-09-07 — Bersihkan form catat transaksi
+- Menghapus field Grup transaksi dari halaman Catat transaksi sesuai arahan UI.
+- Akses Grup transaksi tetap tersedia melalui Akses cepat di dashboard.
+
+## 2026-09-07 — Akses grup di dashboard
+- Menambahkan Grup transaksi ke bagian Akses cepat di dashboard.
+- Menghapus link grup dari tombol navigasi Kembali agar tidak muncul di setiap halaman.
+
+## 2026-09-07 — CRUD grup transaksi awal
+- Menambahkan halaman `/dashboard/groups` untuk membuat dan melihat grup transaksi.
+- Grup mendukung nama, deskripsi, warna, tanggal mulai, dan tanggal selesai.
+- Menampilkan total pemasukan, pengeluaran, dan jumlah transaksi per grup.
+- Menambahkan aksi hapus grup; transaksi tetap aman karena relasi memakai `ON DELETE SET NULL`.
+- Transaksi baru sudah memiliki pilihan grup opsional.
+- Lint dan production build berhasil.
+
+## 2026-09-07 — Assign grup pada transaksi
+- Form transaksi baru sekarang memuat pilihan grup transaksi opsional.
+- Validasi transaksi mendukung `groupId`.
+- RPC pencatatan transaksi diperbarui agar memvalidasi ownership grup dan menyimpan `group_id`.
+- Migration tambahan dibuat di `014_transaction_group_rpc.sql`.
+- Lint dan production build berhasil.
+
+## 2026-09-07 — Migration transaction groups
+- Menambahkan tabel `transaction_groups` untuk mengelompokkan transaksi berdasarkan konteks seperti perjalanan atau proyek.
+- Menambahkan `transactions.group_id` dengan foreign key yang memastikan grup dan transaksi berasal dari user yang sama.
+- Menambahkan RLS, index grup, validasi tanggal, dan opsi metadata warna/deskripsi.
+
 ## 2026-09-02 — Polish card rekening
 - Menambahkan border halus dan hover state pada card rekening.
 - Border dark mode disesuaikan agar tetap terlihat tanpa terlalu kontras.

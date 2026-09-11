@@ -7,8 +7,9 @@ import { PendingSubmitButton } from "@/components/pending-submit-button";
 
 type Category = { id: string; name: string; kind: "income" | "expense" };
 type Account = { id: string; name: string; balance: number | string };
+type SelectedGroup = { id: string; name: string; color: string } | null;
 
-export function TransactionForm({ accounts, categories, today, returnTo }: { accounts: Account[]; categories: Category[]; today: string; returnTo?: string }) {
+export function TransactionForm({ accounts, categories, selectedGroup, selectedGroupId, today, returnTo }: { accounts: Account[]; categories: Category[]; selectedGroup: SelectedGroup; selectedGroupId?: string; today: string; returnTo?: string }) {
   const [selectedType, setSelectedType] = useState<"expense" | "income" | "transfer">("expense");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sourceAccount, setSourceAccount] = useState("");
@@ -30,6 +31,8 @@ export function TransactionForm({ accounts, categories, today, returnTo }: { acc
   return (
     <form action={createTransaction} className="space-y-5">
       <input type="hidden" name="returnTo" value={resolvedReturnTo} />
+      <input type="hidden" name="groupId" value={selectedGroupId || ""} />
+      {selectedGroup && <div className="flex items-center gap-3 rounded-2xl border border-[#cfe2c9] bg-[#f0f7ed] px-4 py-3.5 shadow-sm dark:border-[#38563d] dark:bg-[#1d3324]"><span className="grid size-9 shrink-0 place-items-center rounded-xl text-white" style={{ backgroundColor: selectedGroup.color }}><svg aria-hidden="true" viewBox="0 0 24 24" className="size-4 fill-none stroke-current stroke-2"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12.5 9.5 17 19 7.5" /></svg></span><div className="min-w-0"><p className="text-xs font-semibold uppercase tracking-[.14em] text-[#5e8a54] dark:text-[#a9c8aa]">Grup transaksi</p><p className="mt-0.5 truncate text-sm font-semibold text-[#173d2b] dark:text-[#edf5ee]">{selectedGroup.name}</p></div></div>}
       <fieldset>
         <legend className="text-sm font-medium">Jenis transaksi</legend>
         <div className="mt-2 grid grid-cols-3 gap-2 rounded-2xl bg-[#f7faf5] p-1">

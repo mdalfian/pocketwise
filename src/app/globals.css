@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Dark mode is controlled by the app toggle, not by the operating system. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f3f7f1;
   --foreground: #171717;
@@ -7,7 +10,7 @@
 
 html,
 body {
-  background: #173d2b;
+  background: var(--background);
 }
 
 html.dark {
@@ -21,13 +24,6 @@ html.dark {
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #101713;
-    --foreground: #edf5ee;
-  }
 }
 
 body {
@@ -108,6 +104,14 @@ html.dark .bg-\[\#eef8ee\] { background-color: #1f3827; }
 html.dark .bg-\[\#f1f3f0\] { background-color: #26332a; }
 html.dark [class*="border-[#edf1ed]"], html.dark [class*="border-[#e6eee4]"], html.dark [class*="border-[#cbdac8]"] { border-color: #38503d; }
 html.dark [class*="border-dashed"] { border-color: #46634a; }
+html.dark .group-empty-state { background-color: #18231c; border-color: #46634a; }
+html.dark .group-empty-state p:first-child { color: #d8f37d; }
+html.dark .group-empty-state p:nth-child(2) { color: #aab9ad; }
+/* Group detail hero stays clean white in light mode. */
+html:not(.dark) .bg-\[\#e8f1e5\] { background-color: #ffffff; }
+html.dark main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8.rounded-3xl.border-dashed { background-color: #18231c; border-color: #46634a; }
+html.dark main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8.rounded-3xl.border-dashed p:first-child { color: #d8f37d; }
+html.dark main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8.rounded-3xl.border-dashed p:nth-child(2) { color: #aab9ad; }
 main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8 article.rounded-3xl {
   border: 1px solid #e1e9df;
 }

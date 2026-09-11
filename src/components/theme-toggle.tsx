@@ -11,7 +11,7 @@ export function ThemeToggle() {
       try {
         savedTheme = window.localStorage.getItem("theme");
       } catch { }
-      const shouldUseDark = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      const shouldUseDark = savedTheme === "dark";
       document.documentElement.classList.toggle("dark", shouldUseDark);
       setDark(shouldUseDark);
     });
