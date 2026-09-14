@@ -9,11 +9,11 @@ export function CreateGroupModal() {
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="rounded-xl bg-[#173d2b] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#24573c] focus:outline-none focus:ring-2 focus:ring-[#d8f37d]">
-        + Buat grup
+      <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#173d2b] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#24573c] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#d8f37d] sm:w-auto">
+        <span aria-hidden="true" className="text-lg leading-none">+</span> Buat grup
       </button>
       {open && <div className="fixed inset-0 z-50 flex items-end bg-[#173d2b]/30 p-4 backdrop-blur-sm sm:items-center sm:justify-center" role="dialog" aria-modal="true" aria-labelledby="create-group-title">
-        <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8">
+        <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl dark:bg-[#18231c] sm:p-8">
           <div className="flex items-start justify-between gap-4">
             <div><p className="text-sm font-semibold uppercase tracking-[.16em] text-[#5e8a54]">Grup baru</p><h2 id="create-group-title" className="mt-2 text-2xl font-semibold text-[#173d2b]">Buat grup transaksi</h2><p className="mt-2 text-sm text-[#718076]">Contoh: Trip Semarang atau renovasi rumah.</p></div>
             <button type="button" onClick={() => setOpen(false)} aria-label="Tutup modal" className="grid size-9 shrink-0 place-items-center rounded-full bg-[#f3f7f1] text-xl text-[#526057] transition duration-200 hover:rotate-90 hover:bg-[#e8f1e5]">×</button>

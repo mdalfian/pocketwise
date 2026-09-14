@@ -107,6 +107,18 @@ html.dark [class*="border-dashed"] { border-color: #46634a; }
 html.dark .group-empty-state { background-color: #18231c; border-color: #46634a; }
 html.dark .group-empty-state p:first-child { color: #d8f37d; }
 html.dark .group-empty-state p:nth-child(2) { color: #aab9ad; }
+@media (max-width: 639px) {
+  main.min-h-screen.bg-\[\#f3f7f1\] article.rounded-3xl > div:last-child {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  main.min-h-screen.bg-\[\#f3f7f1\] article.rounded-3xl > div:last-child > a {
+    min-height: 2.75rem;
+    justify-content: center;
+    border-radius: 0.75rem;
+  }
+}
 /* Group detail hero stays clean white in light mode. */
 html:not(.dark) .bg-\[\#e8f1e5\] { background-color: #ffffff; }
 html.dark main.min-h-screen.bg-\[\#f3f7f1\] > div > section.mt-8.rounded-3xl.border-dashed { background-color: #18231c; border-color: #46634a; }
